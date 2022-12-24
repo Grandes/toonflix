@@ -13,8 +13,18 @@ class _HomeScreenState extends State<HomeScreen> {
   static const twentyFiveMinutes = 1500;
   int totalSeconds = twentyFiveMinutes;
   bool isRunning = false;
+  bool isReturning = false;
   int totalPomodoros = 0;
   late Timer timer;
+
+  void onRestorePressed() {
+    timer.cancel();
+
+    setState(() {
+      isRunning = false;
+      totalSeconds = twentyFiveMinutes;
+    });
+  }
 
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
@@ -78,13 +88,25 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: 3,
             child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 120,
+                    color: Theme.of(context).cardColor,
+                    onPressed: isRunning ? onPausePressed : onStartPressed,
+                    icon: Icon(isRunning
+                        ? Icons.pause_circle_outline
+                        : Icons.play_circle_outline),
+                  ),
+                  if(totalSeconds != twentyFiveMinutes)
+                    IconButton(
+                      iconSize: 50,
+                      color: Theme.of(context).cardColor,
+                      onPressed: onRestorePressed,
+                      icon: const Icon(Icons.restore),
+                    )
+                ],
               ),
             ),
           ),
